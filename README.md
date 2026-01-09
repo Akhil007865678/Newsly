@@ -7,74 +7,74 @@ Users can read, like, upload, and manage news articles while receiving smart sug
 
   **🔐 User Authentication & Authorization**
   
-    Signup & Login using JWT
+   Signup & Login using JWT
     
-    Protected routes
+   Protected routes
 
   **📰 News Management**
   
-    Create, read, update, delete (CRUD) news articles
+   Create, read, update, delete (CRUD) news articles
     
-    Upload news with images
+   Upload news with images
     
-    Categorized news feed
+   Categorized news feed
 
 **❤️ Like System**
 
-    Users can like/unlike news
+   Users can like/unlike news
     
-    Like count stored in database
+   Like count stored in database
 
 **🤖 AI-Based Recommendation System**
 
-    Personalized news recommendations
+   Personalized news recommendations
     
-    Based on user likes, interests, and interaction history
+   Based on user likes, interests, and interaction history
     
-    Uses embeddings & vector similarity (Pinecone)
+   Uses embeddings & vector similarity (Pinecone)
 
 **🧠 Newsly AI – Project Q&A Assistant**
 
-    Users can ask questions about the Newsly project
+  Users can ask questions about the Newsly project
     
-    Newsly AI can answer:
+  Newsly AI can answer:
     
-      How the project works
+   How the project works
       
-      Tech stack details
+   Tech stack details
       
-      API explanations
+   API explanations
       
-      Architecture and design decisions
+   Architecture and design decisions
       
-      AI recommendation logic
+   AI recommendation logic
       
-      Acts as an AI guide for understanding the entire project
+   Acts as an AI guide for understanding the entire project
       
-      Powered by embeddings and vector search over project knowledge
+   Powered by embeddings and vector search over project knowledge
 
 **⚡ Performance Optimization**
 
-    Redis caching for faster news retrieval
+   Redis caching for faster news retrieval
     
-    Reduced database calls
+   Reduced database calls
 
 **👤 User Profile**
 
-    View user-specific uploaded news
+   View user-specific uploaded news
     
-    Profile-based news fetching
+   Profile-based news fetching
 
 **📱 Responsive UI**
 
-    Clean and modern UI built with React
+   Clean and modern UI built with React
 
 **🛠️ Tech Stack**
 
-    Frontend: React.js, React Router, Axios, CSS.
+   Frontend: React.js, React Router, Axios, CSS.
     
-    Backend: Node.js, Express.js, MongoDB (Mongoose), JWT Authentication, Redis (Caching), AI & Data, OpenAI Embeddings, Pinecone Vector Database, Tools & Services,
-             Cloudinary (Image Uploads), Docker (Optional for Redis).
+   Backend: Node.js, Express.js, MongoDB (Mongoose), JWT Authentication, Redis (Caching), AI & Data, OpenAI Embeddings, Pinecone Vector Database, Tools & Services,
+            Cloudinary (Image Uploads), Docker (Optional for Redis).
 
 **🧠 How Newsly AI Works**
 
