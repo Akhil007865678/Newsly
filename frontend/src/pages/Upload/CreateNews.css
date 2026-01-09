@@ -1,0 +1,114 @@
+.form-container {
+  padding-top: 65px; 
+  padding-bottom: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  min-height: 100vh;
+}
+
+.form-container form h2 {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.form-container form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-container input,
+.form-container textarea {
+  /* Inherit base input styles from App.css for consistency */
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-container textarea {
+  resize: vertical;
+  min-height: 200px; /* Adequate space for news content */
+  font-family: inherit;
+}
+
+.form-container input:focus,
+.form-container textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15); /* Softer focus glow */
+}
+
+/* File Input Styling (Making it look presentable) */
+.form-container input[type="file"] {
+  border: 2px dashed var(--border-color);
+  padding: 15px;
+  background-color: var(--background-color);
+  cursor: pointer;
+  color: var(--secondary-text);
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+.form-container input[type="file"]::file-selector-button {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.form-container input[type="file"]::file-selector-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.form-container button[type="submit"] {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  border: 2px solid var(--primary-color);
+  padding: 12px 25px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+@media (max-width: 650px) {
+  .form-container {
+    padding: 60px 10px 20px 10px;
+    max-width: 100%;
+  }
+  .form-container h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+  .form-container form {
+    padding: 10px;
+  }
+  .form-container input,
+  .form-container textarea {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+}

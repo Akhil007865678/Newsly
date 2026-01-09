@@ -1,0 +1,330 @@
+/*.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 16px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.home-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.news-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.news-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.news-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.news-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.news-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.news-content {
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.news-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.like-btn,
+.follow-btn {
+  flex: 1;
+  background-color: #f3f4f6;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.like-btn:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.follow-btn:hover {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+/* Active states */
+/*
+.liked {
+  background-color: #fecaca;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.followed {
+  background-color: #bfdbfe;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.no-news {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* ======= Responsive ======= */
+/*
+@media (max-width: 768px) {
+  .home-title {
+    font-size: 1.6rem;
+  }
+  .news-img {
+    height: 180px;
+  }
+  .news-card {
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-body {
+    padding: 12px;
+  }
+  .news-title {
+    font-size: 1.1rem;
+  }
+  .news-content {
+    font-size: 0.9rem;
+  }
+  .like-btn,
+  .follow-btn {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+*/
+
+:root {
+  /* Branding Colors */
+  --primary-color: #007bff; /* Bright Blue for emphasis and actions */
+  --primary-hover: #0056b3; /* Darker blue for interaction */
+  
+  /* Background & Surface Colors */
+  --background-color: #f4f7f6; /* Light, clean body background */
+  --card-background: #ffffff; /* White surfaces */
+  
+  /* Text & Utility Colors */
+  --text-color: #343a40; /* Main dark text */
+  --secondary-text: #6c757d; /* Muted gray for meta data */
+  --error-color: #dc3545; /* Red for errors/alerts */
+  --success-color: #28a745; /* Green for success */
+  --border-color: #e9ecef; /* Light gray borders */
+}
+
+/* Base Reset and Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the main app wrapper takes up full space */
+#root, .App {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/*
+=====================================================================
+  MAIN CONTENT LAYOUT
+=====================================================================
+*/
+
+/* This class should wrap all page content (Home, Upload, Profile)
+   and ensures content is spaced correctly below the Navbar */
+.page-content-wrapper {
+    flex-grow: 1;
+    padding-top: 80px; /* Space for fixed/sticky navbar (assuming 60-70px height) */
+    padding-bottom: 20px;
+}
+
+/*
+=====================================================================
+  UTILITY & GLOBAL COMPONENTS
+=====================================================================
+*/
+
+/* General Button Styling (Base for all buttons) */
+button {
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 8px; /* Consistent rounded corners */
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Primary Button Style (For logins, submits, main actions) */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-1px); /* Subtle press effect */
+}
+
+/* Link Styling */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Input Field Base Styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Standard Card/Form Container */
+.auth-container, .form-card {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.auth-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* Alert/Message Box */
+.message-box {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.message-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+}
+
+.message-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+/*
+=====================================================================
+  MEDIA QUERIES FOR GLOBAL RESPONSIVENESS
+=====================================================================
+*/
+
+@media (max-width: 600px) {
+    body {
+        font-size: 15px; /* Slightly smaller base font for mobile */
+    }
+    .page-content-wrapper {
+        padding-top: 60px; /* Less space needed for smaller mobile nav */
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .auth-container, .form-card {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+}
