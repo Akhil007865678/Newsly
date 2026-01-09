@@ -56,3 +56,7 @@ Users can read, like, upload, and manage news articles while receiving smart sug
    Similarity search retrieves the most relevant information
    Newsly AI generates a clear, contextual answer about the project
    This allows users and developers to understand Newsly without reading the entire codebase.
+
+**👨‍💻 Author**
+Akhil Raj
+Full-Stack Developer | MERN | AI Enthusiast
