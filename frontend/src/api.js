@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: process.env.REACT_APP_API_URL });
+const API = axios.create({ baseURL: "https://newsly-backend-3vet.onrender.com/api" });
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
