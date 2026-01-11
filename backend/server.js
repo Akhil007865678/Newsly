@@ -20,6 +20,9 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/comments", commentRoutes);
+app.get("/health", (req, res) => {
+  res.send("OK");
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
