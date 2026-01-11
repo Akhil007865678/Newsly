@@ -124,7 +124,10 @@ const Navbar = () => {
         {token ? (
           <>
             <Link to="/" onClick={toggleSidebar}>Home</Link>
-            <Link to="/upload" onClick={toggleSidebar}>Create</Link>
+            <Link to="/newsly" onClick={toggleSidebar}>Newsly Ai</Link>
+            <Link to="/upload" onClick={toggleSidebar}>Upload News</Link>
+            <Link to="/profile" onClick={toggleSidebar}>Profile</Link>
+            <h4 style={{ textDecoration: "underline", color: "#187bf5" }}>News Channels</h4>
             {newspapers.map((paper, idx) => (
               <div
                 key={idx}
@@ -134,8 +137,7 @@ const Navbar = () => {
                 {paper.name}
               </div>
             ))}
-            <Link to="/profile" onClick={toggleSidebar}>Profile</Link>
-            <Link to="/newsly" onClick={toggleSidebar}>Newsly</Link>
+
             <button className="logout-btn" onClick={handleLogout}>Logout</button>
           </>
         ) : (

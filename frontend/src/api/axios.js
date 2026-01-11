@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://newsly-backend-3vet.onrender.com/api",
+  baseURL: process.env.REACT_APP_API_URL,
   withCredentials: true,
 });
 

@@ -32,15 +32,13 @@ const ProfilePage = () => {
     <div className="profile-container">
       <header className="profile-header">
         <img 
-          src={userData?.user?.profilePic}
+          src="https://imgs.search.brave.com/hT1tOqBHh4R8vuiAy0-N5VvWOqwe-WZ9K2a-pgXs0AM/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tb2Nr/bWluZC1hcGkudWlm/YWNlcy5jby9jb250/ZW50L2NhcnRvb24v/MjYuanBn"
           alt="Profile" 
           className="profile-pic" 
         />
         <div className="profile-info">
           <h1>{userData?.user?.name}</h1>
-          <p className="profile-bio">
-            Investigative reporter covering tech, climate change, and global economy for Newsly.
-          </p>
+          <p className="profile-bio">{userData?.user?.bio}</p>
           
           <div className="stats-bar">
             <div className="stat-item">

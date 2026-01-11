@@ -13,7 +13,7 @@ const Search = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await API.get(`/news/${query}`);
+        const res = await API.get(`/news/search/${query}`);
         setNewsList(res.data);
       } catch (error) {
         console.error("Error fetching news:", error);

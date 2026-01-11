@@ -3,6 +3,7 @@ import API from "../../api";
 import { useNavigate } from "react-router-dom";
 import './CreateNews.css';
 import Loader from "../../components/Loading/Loader";
+import { toast } from "react-toastify";
 
 const CreateNews = () => {
   const [form, setForm] = useState({ title: "", content: "", category: "" });
@@ -34,11 +35,11 @@ const CreateNews = () => {
         createdAt: savedNews.createdAt,
       });
       setLoading(false);
-      alert("News posted successfully!");
+      toast.success("News posted successfully!");
       navigate("/");
     } catch (err) {
       setLoading(false);
-      alert("Error uploading news.");
+      toast.error("Error uploading news.");
     }
   };
   if (loading) {

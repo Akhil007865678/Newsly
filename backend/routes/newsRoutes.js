@@ -16,11 +16,11 @@ const upload = multer({ storage });
 
 router.post("/", verifyToken, upload.single("image"), createNews);
 router.get("/", getAllNews);
-router.get("/:query", getSearchNews);
+router.get("/search/:query", getSearchNews);
 router.get("/user", verifyToken, getUserNews);
 router.put("/:id", verifyToken, updateNews);
 router.post("/:id/like", verifyToken, toggleLike);
 router.post("/newsly", ai);
-router.get("/:authorId", getAuthor);
+router.get("/author/:authorId", getAuthor);
 
 export default router;

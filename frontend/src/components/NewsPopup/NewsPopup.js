@@ -30,12 +30,12 @@ const NewsPopup = ({ news, onClose }) => {
   useEffect(() => {
     const IsFollow = async () => {
       try{
-        await API.post(`/auth/${news._id}/isfollow`,{
+        const res = await API.post(`/auth/${news._id}/isfollow`,{
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        setSubscribed(true);
+        setSubscribed(res.data.following);
       }
       catch(error){
         console.log("Problem occurred in handle Follow function: ", error);
@@ -49,8 +49,8 @@ const NewsPopup = ({ news, onClose }) => {
     const fetchAuthor = async () => {
       try {
         const authorId = typeof news.author === "object" ? news.author._id : news.author;
-        const res = await API.get(`/news/${authorId}`);
-        //console.log("data2: ", res.data);
+        const res = await API.get(`/news/author/${authorId}`);
+        console.log(":dataaa:", res);
         setAuthorName(res.data);
       } catch (err) {
         console.error(err);

@@ -3,6 +3,7 @@ import API from "../../api";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
 import Loader from "../../components/Loading/Loader";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -24,7 +25,7 @@ const Login = () => {
       setLoading(false);
       navigate("/");
     } catch (err) {
-      alert(err.response.data.message);
+      toast.error(err.response.data.message);
       setLoading(false);
     }
   };

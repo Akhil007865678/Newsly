@@ -3,6 +3,7 @@ import API from "../../api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loading/Loader";
 import './Signup.css';
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -21,11 +22,11 @@ const Signup = () => {
     try {
       await API.post("/auth/register", form);
       setLoading(false);
-      alert("Signup successful! Please login.");
+      toast.success("Signup successful! Please login.");
       navigate("/login");
     } catch (err) {
       setLoading(false);
-      alert(err.response.data.message);
+      toast.error(err.response.data.message);
     }
   };
   if (loading) {
@@ -42,6 +43,8 @@ const Signup = () => {
         <input className="input-data" name="name" placeholder="Name" onChange={handleChange} required />
         <input className="input-data" name="email" placeholder="Email" onChange={handleChange} required />
         <input className="input-data" type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <textarea name="bio" placeholder="Content" onChange={handleChange} required />
+        
         <button type="submit">Signup</button>
         <div className="auth-footer-link">
           <p>If you have an account <span onClick={handleSignupRedirect}>Login</span></p>

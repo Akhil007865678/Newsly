@@ -2,6 +2,7 @@ import express from "express";
 import { register, login, getMe, toggleFollow, isFollow } from "../controllers/authController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { storeNewsVector, recommendNews } from "../controllers/recommendation.js";
+
 const router = express.Router();
 
 router.post("/register", register);

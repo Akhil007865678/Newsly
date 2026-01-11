@@ -10,6 +10,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 import Newslybot from "./pages/NewslyBot/Newslybot";
 import Search from "./pages/Search/Search";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AppContent() {
   const token = localStorage.getItem("token");
@@ -39,6 +41,15 @@ function AppContent() {
           }
         />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </>
   );
 }
