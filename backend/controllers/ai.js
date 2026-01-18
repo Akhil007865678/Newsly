@@ -57,6 +57,7 @@ export const ai = async (req, res) => {
             "I’m an AI assistant trained specifically on the Newsly project. I can answer any questions about Newsly, but I don’t have information outside of it."
             Do NOT use prior knowledge.
             Do NOT make assumptions.
+            Respond in plain text only. Do not use any Markdown formatting, symbols, or special characters like asterisks or hashtags for emphasis.
         `,
       },
       {

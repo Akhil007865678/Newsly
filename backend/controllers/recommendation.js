@@ -1,8 +1,16 @@
 import { index } from "../config/pinecone.js";
 import { createEmbedding } from "../utils/embedding.js";
 import News from "../models/News.js";
-import User from "../models/User.js";
+import { Pinecone } from "@pinecone-database/pinecone";
 import redisClient from "../config/redis.js";
+import { ChatGroq } from "@langchain/groq";
+
+
+const pinecone = new Pinecone({
+  apiKey: process.env.PineCone_Key,
+});
+
+const index2 = pinecone.index("rag-news");
 
 function averageVectors(vectors) {
   if (!vectors || vectors.length === 0) return [];
@@ -23,7 +31,6 @@ function averageVectors(vectors) {
   return avgVector;
 }
 
-
 export const storeNewsVector = async (req, res) => {
   try {
     const { _id, title, content, category, author, createdAt } = req.body;
@@ -31,7 +38,8 @@ export const storeNewsVector = async (req, res) => {
     if (!_id || !title || !content) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-
+    
+    ////Store data for recommendations
     const embedding = await createEmbedding(
       `${title} ${content} ${category || ""}`
     );
@@ -48,6 +56,35 @@ export const storeNewsVector = async (req, res) => {
         },
       },
     ]);
+    
+    ////Store data for Rag Ai
+    const text = `${title}\n\n${content}`;
+
+    // chunking
+    const chunks = [];
+    for (let i = 0; i < text.length; i += 500) {
+      chunks.push(text.slice(i, i + 500));
+    }
+
+    for (let i = 0; i < chunks.length; i++) {
+      const embedding = await createEmbedding(chunks[i]);
+
+      await index2.upsert([
+        {
+          id: `rag_${_id}_${i}`,
+          values: embedding,
+          metadata: {
+            type: "rag",
+            newsId: _id.toString(),
+            title,
+            category,
+            author,
+            createdAt,
+            chunk_text: chunks[i],
+          },
+        },
+      ]);
+    }
 
     res.status(200).json({ message: "News vector stored successfully" });
   } catch (error) {
@@ -64,15 +101,16 @@ export const recommendNews = async (req, res) => {
     const cacheKey = `news:${req.user.id}`;
     const likedNews = await News.find({ likes: req.user.id });
     const cachedNews = await redisClient.get(cacheKey);
+
     if (cachedNews) {
-      console.log("redis called and it is working");
+      console.log("Redis called and it is working");
       return res.json(JSON.parse(cachedNews));
     }
 
-    // 🧊 COLD START: New user
+    // Cold start: new user
     if (likedNews.length === 0) {
       const allNews = await News.find()
-        .sort({ createdAt: -1 }) // latest first
+        .sort({ createdAt: -1 })
         .limit(20);
 
       return res.json({
@@ -81,31 +119,17 @@ export const recommendNews = async (req, res) => {
       });
     }
 
-    /*
-    it converts :
-    likedNews = [
-      { title: "AI in Healthcare", embedding: [0.1, 0.2, 0.3] },
-      { title: "Future of AI", embedding: [0.2, 0.1, 0.4] },
-      { title: "Machine Learning Trends", embedding: [0.15, 0.25, 0.35] }
-    ];
-    into after .map():
-    embeddings = [
-      [0.1, 0.2, 0.3],
-      [0.2, 0.1, 0.4],
-      [0.15, 0.25, 0.35]
-    ];
-
-    */
+    // Generate embeddings for liked news
     const embeddings = await Promise.all(
       likedNews.map(news =>
-        createEmbedding(`${news.title} ${news.content} ${news.category || ""}`)
+        createEmbedding(`${news.title} ${news.content}`) // keep same as stored
       )
     );
 
-    //averageVectors converts all vectors into one average vector
+    // Average embeddings to create user vector
     const userVector = averageVectors(embeddings);
-    
-    //this block of code return top 10 relevent news on the basis of userVector
+
+    // Query Pinecone (recommendation type only)
     const result = await index.query({
       vector: userVector,
       topK: 10,
@@ -114,17 +138,147 @@ export const recommendNews = async (req, res) => {
 
     const likedIds = new Set(likedNews.map(n => n._id.toString()));
 
-    //It removes already-liked news from the recommendations and extracts only the IDs of the remaining news.
-    const ids = result.matches.filter(m => !likedIds.has(m.id)).map(m => m.id);
-    const recommendations = await News.find({ _id: { $in: ids } });
+    // Extract news IDs correctly (strip "rec_" prefix)
+    const ids = result.matches.map(m => m.id).filter(id => !likedIds.has(id));
 
-    await redisClient.setEx(
-      cacheKey,
-      300,
-      JSON.stringify(recommendations)
-    );
+    if (!ids.length) {
+      return res.json({ recommendations: [] });
+    }
+
+    // Fetch news from DB and preserve Pinecone order
+    const newsDocs = await News.find({ _id: { $in: ids } });
+    const newsMap = new Map(newsDocs.map(n => [n._id.toString(), n]));
+    const recommendations = ids.map(id => newsMap.get(id)).filter(Boolean);
+
+    // Cache
+    await redisClient.setEx(cacheKey, 300, JSON.stringify(recommendations));
+
     res.json({ recommendations });
   } catch (err) {
+    console.error("Recommendation error:", err);
     res.status(500).json({ error: "Recommendation failed" });
   }
 };
+
+
+export const askRagAI = async (req, res) => {
+  try {
+    const { query } = req.body;
+
+    if (!query) {
+      return res.status(400).json({ message: "Question is required" });
+    }
+
+    // 1️⃣ Generate embedding for the query
+    const queryEmbedding = await createEmbedding(query); // should return a number[] array
+    // 2️⃣ Search Pinecone
+    const results = await index2.query({
+      topK: 5,
+      vector: queryEmbedding,
+      includeMetadata: true,
+      includeValues: true,  // <-- this ensures "values" is populated
+    });
+    console.log("Metadata sample:", results.matches[0].metadata);
+
+    // 3️⃣ Extract context from hits
+    const context = results.matches
+  .map(m => m.metadata?.chunk_text)
+  .filter(Boolean)
+  .join("\n\n");
+
+
+    if (!context) {
+      return res.json({
+        answer: "I don’t have enough information in Newsly to answer that."
+      });
+    }
+
+    console.log("context: ", context);
+  
+    // 4️⃣ Prepare system + user messages
+    const messages = [
+      {
+        role: "system",
+        content: `
+          You are a strict question-answering system.
+          You must answer ONLY using the provided context.
+          If the answer is NOT present in the context, say:
+          "I'm an Newsly AI assistant trained specifically on the Newsly project. I can answer any questions about Newsly's news, but I don't have information outside of it."
+          Do NOT use prior knowledge.
+          Do NOT make assumptions.
+          Respond in plain text only. Do not use Markdown, symbols, or special characters.
+        `,
+      },
+      {
+        role: "user",
+        content: `
+          Context:
+          ${context}
+
+          Question:
+          ${query}
+        `,
+      },
+    ];
+
+    // 5️⃣ Call Groq LLM
+    const llm = new ChatGroq({
+      apiKey: process.env.GROQ_API_KEY,
+      model: "openai/gpt-oss-20b",
+    });
+    const response = await llm.invoke(messages);
+
+    res.json({ answer: response.content });
+
+  } catch (error) {
+    console.error("RAG error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/*
+export const ragDataUpload = async (req, res) => {
+  try {
+    const { _id, title, content, category, author, createdAt } = req.body;
+
+    if (!_id || !title || !content) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const text = `${title}\n\n${content}`;
+
+    // chunking
+    const chunks = [];
+    for (let i = 0; i < text.length; i += 500) {
+      chunks.push(text.slice(i, i + 500));
+    }
+
+    for (let i = 0; i < chunks.length; i++) {
+      const embedding = await createEmbedding(chunks[i]);
+
+      await index2.upsert([
+        {
+          id: `rag_${_id}_${i}`,
+          values: embedding,
+          metadata: {
+            type: "rag",
+            newsId: _id.toString(),
+            title,
+            category,
+            author,
+            createdAt,
+            chunk_text: chunks[i],
+          },
+        },
+      ]);
+    }
+
+    console.log(`✅ Backfilled news: ${title}`);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Backfill error:", error);
+    res.status(500).json({ error: "Backfill failed" });
+  }
+};
+*/

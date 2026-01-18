@@ -34,7 +34,7 @@ const Newslybot = () => {
 
     try {
       // 2. Actual Backend Call
-      const response = await API.post("/news/newsly", { query: userQuery });
+      const response = await API.post("/auth/ask", { query: userQuery });
       
       // 3. Add AI Response to UI
       const botResponse = { 
@@ -116,7 +116,7 @@ const Newslybot = () => {
             className="send-btn" 
             disabled={!input.trim() || isTyping}
           >
-            <Send size={18} />
+            <Send className='mid-btn' size={18} />
           </button>
         </form>
         <p className="disclaimer">Newsly AI can make mistakes. Verify important info.</p>

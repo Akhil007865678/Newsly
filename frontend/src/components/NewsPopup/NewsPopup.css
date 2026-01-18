@@ -308,6 +308,39 @@
     position: absolute;
   }
 }
+.tts-actions {
+  margin: 12px 0;
+}
+
+.tts-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tts-btn.stop {
+  background: #dc2626;
+}
+
+.language-select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+  margin-right: 8px;
+}
+
+/* On focus */
+.language-select:focus {
+  border-color: #007bff;
+}
 
 /* Mobile Adjustments for Comments Section (<= 550px) */
 @media (max-width: 550px) {

@@ -160,7 +160,6 @@ textarea:focus {
   cursor: pointer;
   transition: opacity 0.2s;
 }
-
 .input-wrapper button{
   width: 30px;
   margin-bottom: 7%;
