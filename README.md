@@ -1,7 +1,7 @@
 **📰 Newsly – AI-Powered News Platform**
 
 Newsly is a full-stack MERN application that delivers personalized news content using AI-based recommendations. 
-Users can read, like, upload, and manage news articles while receiving smart suggestions and ask questions about the Newsly project itself using Newsly AI.
+Users can read, like, upload, and manage news articles while receiving smart suggestions and ask questions about the Newsly news using Newsly AI.
 
 **🚀 Features**
 
@@ -35,23 +35,7 @@ Users can read, like, upload, and manage news articles while receiving smart sug
 
 **🧠 Newsly AI – Project Q&A Assistant**
 
-  Users can ask questions about the Newsly project
-    
-  Newsly AI can answer:
-    
-   How the project works
-      
-   Tech stack details
-      
-   API explanations
-      
-   Architecture and design decisions
-      
-   AI recommendation logic
-      
-   Acts as an AI guide for understanding the entire project
-      
-   Powered by embeddings and vector search over project knowledge
+  Users can ask questions about the any news which is on Newsly
 
 **⚡ Performance Optimization**
 
