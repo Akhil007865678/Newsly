@@ -62,15 +62,17 @@ export const toggleFollow = async (req, res) => {
     const userId = req.user.id;
     const news = await News.findById(req.params.id);
     const targetId = news.author.toString();
+    //console.log("ids: ", userId, news, targetId);
 
-    console.log(targetId);
     if (targetId === userId) return res.status(400).json({ message: "You can't follow yourself" });
 
     const targetUser = await User.findById(targetId);
     const currentUser = await User.findById(userId);
 
-    const isFollowing = currentUser.following.includes(targetId);
-
+    const isFollowing = currentUser.following.some(
+      id => id.toString() === targetId
+    );
+    //console.log("isFollowing", isFollowing);
     if (isFollowing) {
       currentUser.following = currentUser.following.filter((id) => id.toString() !== targetId);
       targetUser.followers = targetUser.followers.filter((id) => id.toString() !== userId);
@@ -80,6 +82,7 @@ export const toggleFollow = async (req, res) => {
     }
     await currentUser.save();
     await targetUser.save();
+    //console.log("follwing done");
     res.json({ following: !isFollowing });
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -118,6 +118,27 @@ export const toggleLike = async (req, res) => {
   }
 };
 
+export const isLike = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: "News not found" });
+    const isLiked = news.likes.some(
+      (id) => id.toString() === userId
+    );
+    const totalLikes = news.likes.length;
+
+    res.json({
+      liked: isLiked,
+      totalLikes: totalLikes,
+    });
+  } catch (err) {
+    console.error("isLike error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
 export const getAuthor = async (req, res) => {
   try{
     const { authorId } = req.params;

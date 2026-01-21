@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import API from "../../api"; // your axios instance
 import './NewsPopup.css';
 import { getToken } from "../../utils/auth";
+import { toast } from "react-toastify";
 
 const NewsPopup = ({ news, onClose }) => {
   const [liked, setLiked] = useState(false);
@@ -47,7 +48,23 @@ const NewsPopup = ({ news, onClose }) => {
         console.log("Problem occurred in handle Follow function: ", error);
       }
     };
+    const isLike = async () => {
+      try{
+        const res = await API.get(`/news/islike/${news._id}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        //console.log("Like data: ",res.data.liked, res.data.totalLikes);
+        if(res.data.liked) setLiked(!liked);
+        setLikeCount(res.data.totalLikes);
+      } catch(error){
+        console.log("Problem occurred in handlelike function: ", error);
+        toast.error("Something went wrong");
+      }
+    };
     IsFollow();
+    isLike();
   },[]);
 
   //fetching author name of a news
@@ -86,11 +103,13 @@ const NewsPopup = ({ news, onClose }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      toast.success("liked successfully");
       setLiked(!liked);
       setLikeCount(prev => liked ? prev - 1 : prev + 1);
     }
     catch(error){
       console.log("Problem occurred in handlelike function: ", error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -101,10 +120,19 @@ const NewsPopup = ({ news, onClose }) => {
           Authorization: `Bearer ${token}`
         }
       });
+      toast.success("Followed successfully");
       setSubscribed(true);
     }
     catch(error){
-      console.log("Problem occurred in handle Follow function: ", error);
+      console.log("Problem occurred: ", error);
+      const msg = error.response?.data?.message;
+      if (msg === "You can't follow yourself") {
+        toast.error("You can't follow yourself");
+      } else if (msg === "Already following") {
+        toast.info("You are already following this author");
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -188,21 +216,9 @@ const NewsPopup = ({ news, onClose }) => {
         <h2>{loadingTranslation ? "Translating..." : translatedTitle}</h2>
         {news.imageUrl && <img src={news.imageUrl} alt={news.title} />}
         <p>{loadingTranslation ? "Translating..." : translatedContent}</p>
-
-        <p>
-          <strong>Author:</strong> {authorName?.name || "Unknown"}
-        </p>
-
-        {/* Like & Subscribe Buttons */}
-        <div className="modal-actions">
-          <button className={`like-btn ${liked ? "liked" : ""}`} onClick={handleLike}>
-            {liked ? "❤️ Liked" : "🤍 Like"} <span className="count">{likeCount}</span>
-          </button>
-
-          <button className={`subscribe-btn ${subscribed ? "subscribed" : ""}`} onClick={toggleFollow}>
-            {subscribed ? "✓ Subscribed" : "+ Subscribe"} <span className="count"></span>
-          </button>
-
+        
+        <div className="containserOfAuthor">
+          <p><strong>Author:</strong> {authorName?.name || "Unknown"}</p>
           <div className="tts-actions">
             <select
               className="language-select"
@@ -213,8 +229,21 @@ const NewsPopup = ({ news, onClose }) => {
               <option value="hi">Hindi</option>
               <option value="fr">French</option>
             </select>
+          </div>
+        </div>
 
-            {!isSpeaking ? (
+        {/* Like & Subscribe Buttons */}
+        <div className="modal-actions">
+          <button className={`like-btn ${liked ? "liked" : ""}`} onClick={handleLike}>
+            {liked ? "Liked" : "Like"} <span className="count">{likeCount}</span>
+          </button>
+
+          <button className={`subscribe-btn ${subscribed ? "subscribed" : ""}`} onClick={toggleFollow}>
+            {subscribed ? "Subscribed" : "Subscribe"}
+          </button>
+
+          
+          {!isSpeaking ? (
               <button className="tts-btn" onClick={handleSpeak}>
                 🔊 Listen
               </button>
@@ -223,8 +252,6 @@ const NewsPopup = ({ news, onClose }) => {
                 ⏹ Stop
               </button>
             )}
-            
-          </div>
 
         </div>
 

@@ -70,6 +70,12 @@
 /* ================================
    Close Button
 ================================ */
+.containserOfAuthor{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .close-btn {
   position: sticky;
   float: right;
@@ -310,6 +316,7 @@
 }
 .tts-actions {
   margin: 12px 0;
+  margin-left: 5px;
 }
 
 .tts-btn {
