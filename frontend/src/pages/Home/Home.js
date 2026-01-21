@@ -7,6 +7,9 @@ import FilterDropdown from "../../components/Filter/FilterDropdown";
 import NewsFeed from "../../components/Feeds/NewsFeed";
 import NewsPopup from "../../components/NewsPopup/NewsPopup";
 import Loader from "../../components/Loading/Loader";
+import { Bot } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+
 const Home = () => {
   const [newsList, setNewsList] = useState([]);
   const [selectedNews, setSelectedNews] = useState(null);
@@ -16,6 +19,11 @@ const Home = () => {
   const [filterLocation, setFilterLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const token = getToken();
+  const navigate = useNavigate();
+
+  const handleBotClick = () => {
+    navigate(`/newsly`);
+  };
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -59,7 +67,10 @@ const Home = () => {
     <div className="home-container">
       {/* Filter Button */}
       <div className="filter-icon-wrapper">
-        <FiFilter className="filter-icon" onClick={() => setShowFilter(!showFilter)} />
+        <FiFilter className="filter-icon" color="white" onClick={() => setShowFilter(!showFilter)} />
+        <div className="filter-icon" onClick={handleBotClick}>
+          <Bot className="bot" size={20} color="white" />
+        </div>
         {showFilter && (
           <FilterDropdown
             sortBy={sortBy}
