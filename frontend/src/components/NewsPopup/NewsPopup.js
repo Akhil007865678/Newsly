@@ -37,7 +37,7 @@ const NewsPopup = ({ news, onClose }) => {
   useEffect(() => {
     const IsFollow = async () => {
       try{
-        const res = await API.post(`/auth/${news._id}/isfollow`,{
+        const res = await API.post(`/auth/${news._id}/isfollow`, {},{
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -50,7 +50,7 @@ const NewsPopup = ({ news, onClose }) => {
     };
     const isLike = async () => {
       try{
-        const res = await API.get(`/news/islike/${news._id}`,{
+        const res = await API.get(`/news/islike/${news._id}`, {},{
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -73,7 +73,7 @@ const NewsPopup = ({ news, onClose }) => {
       try {
         const authorId = typeof news.author === "object" ? news.author._id : news.author;
         const res = await API.get(`/news/author/${authorId}`);
-        console.log(":dataaa:", res);
+        //console.log(":dataaa:", res);
         setAuthorName(res.data);
       } catch (err) {
         console.error(err);
@@ -98,7 +98,7 @@ const NewsPopup = ({ news, onClose }) => {
 
   const handleLike = async () => {
     try{
-      await API.post(`/news/${news._id}/like`,{
+      await API.post(`/news/${news._id}/like`, {},{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -115,11 +115,13 @@ const NewsPopup = ({ news, onClose }) => {
 
   const toggleFollow = async () => {
     try{
-      await API.post(`/auth/${news._id}/follow`,{
-        headers: {
-          Authorization: `Bearer ${token}`
+      console.log("token: ", token);
+      await API.post(`/auth/${news._id}/follow`,{},{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
+      );
       toast.success("Followed successfully");
       setSubscribed(true);
     }
@@ -206,7 +208,6 @@ const NewsPopup = ({ news, onClose }) => {
 
     translateNews();
   }, [language, news.title, news.content]);
-
 
   return (
     <div className="news-popup-overlay" onClick={onClose}>

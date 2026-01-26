@@ -2,6 +2,16 @@ import News from "../models/News.js";
 import User from "../models/User.js";
 import cloudinary from "../config/cloudinary.js";
 import redisClient from "../config/redis.js";
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
+import Groq from "groq-sdk";
+
+dotenv.config();
+
+const groq = new Groq({
+  apiKey: process.env.Ai_key,
+});
 
 /*export const createNews = async (req, res) => {
   try {
@@ -138,7 +148,6 @@ export const isLike = async (req, res) => {
   }
 };
 
-
 export const getAuthor = async (req, res) => {
   try{
     const { authorId } = req.params;
@@ -176,5 +185,38 @@ export const getSearchNews = async (req, res) => {
     res.json(news);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const voiceSerach = async (req, res) => {
+  try {
+    console.log("FILE:", req.file);
+
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ error: "No audio file received" });
+    }
+
+    // ✅ Use ReadStream
+    const transcription = await groq.audio.transcriptions.create({
+      file: fs.createReadStream(req.file.path),
+      model: "whisper-large-v3",
+      language: "en",
+    });
+
+    // Optional: delete temp file
+    fs.unlinkSync(req.file.path);
+
+    //console.log("Text:", transcription.text);
+    res.json({ text: transcription.text });
+
+    // 🔥 Cleanup: Delete the file from server
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.error("Failed to delete audio file:", err);
+      else console.log("Audio file deleted:", req.file.path);
+    });
+
+  } catch (err) {
+    console.error("STT ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 };

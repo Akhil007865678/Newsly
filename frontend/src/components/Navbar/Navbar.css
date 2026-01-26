@@ -237,6 +237,17 @@
   margin-top: 10px;
 }
 
+.voiceSearch{
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+}
+
+.voiceSearch:hover {
+  background-color: #e8eaed;
+  border-radius: 1rem;
+}
+
 .search-input::placeholder {
   color: #80868b;
 }

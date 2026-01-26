@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import './Navbar.css';
 import { FiMenu, FiSearch } from "react-icons/fi";
+import { MdKeyboardVoice } from "react-icons/md";
+import API from "../../api";
+import { CirclesWithBar } from "react-loader-spinner";
+import { RiVoiceprintFill } from "react-icons/ri";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -11,12 +16,54 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const sidebarRef = useRef(null);
   const [query, setQuery] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleSearch = (e) => {
-    if (e.key === "Enter") {
-      // redirect to /search/<query>
-      navigate(`/search/${query}`);
-    }
+  if (e.key === "Enter") {
+    performSearch(query);
+  }
+};
+
+const performSearch = (searchText) => {
+  const cleanText = searchText.trimStart(); // ✅ only first spacing
+  if (!cleanText) return;
+  navigate(`/search/${cleanText}`);
+};
+
+
+  
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
+
+    setIsRecording(true);
+    mediaRecorder.ondataavailable = (event) => {
+      audioChunks.push(event.data);
+    };
+
+    mediaRecorder.onstop = async () => {
+      setIsRecording(false);
+      const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+      const formData = new FormData();
+      formData.append("audio", audioBlob, "speech.webm");
+      try {
+        const res = await API.post("/news/stt", formData);
+        const text = res.data.text;
+        //console.log("Transcribed Text:", text);
+        if (!text.trim()) return;
+
+        setQuery(text);
+        // ✅ Send directly using text
+        performSearch(text);
+
+      } catch (err) {
+        console.error("Voice to text failed:", err);
+      }
+    };
+
+    mediaRecorder.start();
+    setTimeout(() => mediaRecorder.stop(), 5000);
   };
 
   const newspapers = [
@@ -75,6 +122,21 @@ const Navbar = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleSearch}
             />
+            {isRecording ? <CirclesWithBar 
+              height="40"
+              width="40"
+              color="#2764ec"
+              outerCircleColor="#2764ec"
+              innerCircleColor="#2764ec"
+              barColor="#2764ec"
+              ariaLabel="circles-with-bar-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              /> :
+              <MdKeyboardVoice className="voiceSearch" onClick={() => startRecording()}/>
+            }
+            
           </div>
         </div>
 

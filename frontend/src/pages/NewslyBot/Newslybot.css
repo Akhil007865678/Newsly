@@ -57,6 +57,10 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+.message-row.bot {
+  margin-bottom: 0; 
+}
+
 .message-row.user {
   flex-direction: row-reverse;
 }
@@ -159,6 +163,15 @@ textarea:focus {
   border-radius: 0.75rem;
   cursor: pointer;
   transition: opacity 0.2s;
+}
+.voice_btn{
+  height: 50px;
+  width: 60px;
+  background-color: #2563eb;
+  cursor: pointer;
+  margin-bottom: 3%;
+  border-radius: 0.75rem;
+  margin-right: 10px;
 }
 .input-wrapper button{
   width: 30px;

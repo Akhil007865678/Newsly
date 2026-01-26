@@ -22,6 +22,7 @@ const Login = () => {
     try {
       const res = await API.post("/auth/login", form);
       localStorage.setItem("token", res.data.token);
+      console.log("res: ", res.data)
       setLoading(false);
       navigate("/");
     } catch (err) {
