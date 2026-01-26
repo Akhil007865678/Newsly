@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import News from "../models/News.js";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -61,30 +62,45 @@ export const toggleFollow = async (req, res) => {
   try {
     const userId = req.user.id;
     const news = await News.findById(req.params.id);
-    const targetId = news.author.toString();
-    //console.log("ids: ", userId, news, targetId);
+    if (!news) return res.status(404).json({ message: "News not found" });
 
-    if (targetId === userId) return res.status(400).json({ message: "You can't follow yourself" });
+    const targetId = news.author.toString();
+    if (targetId === userId)
+      return res.status(400).json({ message: "You can't follow yourself" });
 
     const targetUser = await User.findById(targetId);
     const currentUser = await User.findById(userId);
 
+    if (!targetUser || !currentUser)
+      return res.status(404).json({ message: "User not found" });
+
     const isFollowing = currentUser.following.some(
       id => id.toString() === targetId
     );
-    //console.log("isFollowing", isFollowing);
+
     if (isFollowing) {
-      currentUser.following = currentUser.following.filter((id) => id.toString() !== targetId);
-      targetUser.followers = targetUser.followers.filter((id) => id.toString() !== userId);
+      currentUser.following = currentUser.following.filter(
+        id => id.toString() !== targetId
+      );
+      targetUser.followers = targetUser.followers.filter(
+        id => id.toString() !== userId
+      );
     } else {
-      currentUser.following.push(targetId);
-      targetUser.followers.push(userId);
+      currentUser.following.push(new mongoose.Types.ObjectId(targetId));
+      targetUser.followers.push(new mongoose.Types.ObjectId(userId));
     }
-    await currentUser.save();
-    await targetUser.save();
-    //console.log("follwing done");
+
+    await currentUser.save({ validateBeforeSave: false });
+    await targetUser.save({ validateBeforeSave: false });
+
+    console.log("Toggle follow success:", {
+      currentUser: currentUser.following.length,
+      targetUser: targetUser.followers.length
+    });
+
     res.json({ following: !isFollowing });
   } catch (err) {
+    console.error("Toggle follow error:", err);
     res.status(500).json({ message: err.message });
   }
 };

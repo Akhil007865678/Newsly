@@ -116,7 +116,7 @@ const NewsPopup = ({ news, onClose }) => {
   const toggleFollow = async () => {
     try{
       console.log("token: ", token);
-      await API.post(`/auth/${news._id}/follow`,{},{
+      await API.post(`/auth/follow/${news._id}`,{},{
           headers: {
             Authorization: `Bearer ${token}`
           }
