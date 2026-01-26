@@ -2,10 +2,13 @@ import News from "../models/News.js";
 import User from "../models/User.js";
 import cloudinary from "../config/cloudinary.js";
 import redisClient from "../config/redis.js";
-import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import Groq from "groq-sdk";
+import fs from 'fs';
+const dir = './uploads';
+if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
 
 dotenv.config();
 
