@@ -185,10 +185,10 @@ const performSearch = (searchText) => {
         <h3>Menu</h3>
         {token ? (
           <>
-            <Link to="/" onClick={toggleSidebar}>Home</Link>
-            <Link to="/newsly" onClick={toggleSidebar}>Newsly Ai</Link>
-            <Link to="/upload" onClick={toggleSidebar}>Upload News</Link>
-            <Link to="/profile" onClick={toggleSidebar}>Profile</Link>
+            <Link to="/" onClick={toggleSidebar} style={{ textDecoration: "none"}}>Home</Link>
+            <Link to="/newsly" onClick={toggleSidebar} style={{ textDecoration: "none"}}>Newsly Ai</Link>
+            <Link to="/upload" onClick={toggleSidebar} style={{ textDecoration: "none"}}>Upload News</Link>
+            <Link to="/profile" onClick={toggleSidebar} style={{ textDecoration: "none"}}>Profile</Link>
             <h4 style={{ textDecoration: "underline", color: "#187bf5" }}>News Channels</h4>
             {newspapers.map((paper, idx) => (
               <div
