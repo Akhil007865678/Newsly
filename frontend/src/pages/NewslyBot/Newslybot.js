@@ -172,7 +172,7 @@ const Newslybot = () => {
                 handleSend();
               }
             }}
-            placeholder="Ask Newsly AI anything..."
+            placeholder="Ask about news..."
             rows="1"
           />
           {isRecording ? (
