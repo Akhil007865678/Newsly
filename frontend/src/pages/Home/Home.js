@@ -9,6 +9,7 @@ import NewsPopup from "../../components/NewsPopup/NewsPopup";
 import Loader from "../../components/Loading/Loader";
 import { Bot } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
 
 const Home = () => {
   const [newsList, setNewsList] = useState([]);
@@ -89,6 +90,8 @@ const Home = () => {
       {selectedNews && (
         <NewsPopup news={selectedNews} onClose={() => setSelectedNews(null)} />
       )}
+
+      <Footer className="footer"/>
     </div>
   );
 };
