@@ -71,13 +71,7 @@ Newsly is a full-stack MERN application that delivers personalized news content 
    Clean and modern UI built with React
 
    Fully responsive (desktop & mobile)
-
-**🛠️ Tech Stack**
-
-   Frontend: React.js, React Router, Axios, CSS.
-    
-   Backend: Node.js, Express.js, MongoDB (Mongoose), JWT Authentication, Redis (Caching), AI & Data, OpenAI Embeddings, Pinecone Vector Database, Tools & Services,
-            Cloudinary (Image Uploads), Docker (Optional for Redis).
+   
 
 **🧠 How Newsly AI Works (RAG + Conversational Memory + Voice Architecture)**
 
@@ -186,6 +180,13 @@ Newsly is a full-stack MERN application that delivers personalized news content 
    ----> Higher accuracy
    
    ----> Scalable & production-ready
+
+**🛠️ Tech Stack**
+
+   Frontend: React.js, React Router, Axios, CSS.
+    
+   Backend: Node.js, Express.js, MongoDB (Mongoose), JWT Authentication, Redis (Caching), AI & Data, OpenAI Embeddings, Pinecone Vector Database, Tools & Services,
+            Cloudinary (Image Uploads), Docker (Optional for Redis).
 
 
 **👨‍💻 Creator – Akhil Raj **
