@@ -164,27 +164,22 @@ export const getAuthor = async (req, res) => {
 export const getSearchNews = async (req, res) => {
   try {
     const { query } = req.params;
-    const cacheKey = `search${query}`;
-    // 1️⃣ Check cache
-    const cachedNews = await redisClient.get(cacheKey);
-    if (cachedNews) {
-      console.log("redis called and it is working");
-      return res.json(JSON.parse(cachedNews));
-    }
+
+    const keywords = query.split(" ").filter(word => word.length > 2);
+
+    const regexArray = keywords.map(word => ({
+      title: { $regex: word, $options: "i" }
+    }));
+
     const news = await News.find({
       $or: [
-        { title: { $regex: query, $options: "i" } },
+        ...regexArray,
         { content: { $regex: query, $options: "i" } },
         { category: { $regex: query, $options: "i" } },
         { location: { $regex: query, $options: "i" } },
       ],
     });
-    await redisClient.setEx(
-      cacheKey,
-      300,
-      JSON.stringify(news)
-    );
-    //console.log("news: ", news);
+
     res.json(news);
   } catch (err) {
     res.status(500).json({ message: err.message });
