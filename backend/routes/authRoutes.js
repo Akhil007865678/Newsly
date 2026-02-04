@@ -2,6 +2,7 @@ import express from "express";
 import { register, login, getMe, toggleFollow, isFollow } from "../controllers/authController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { storeNewsVector, recommendNews, askRagAI } from "../controllers/recommendation.js";
+import { detectEmotion } from "../controllers/ai.js";
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ router.get("/me", verifyToken, getMe);
 router.post("/store-vector", storeNewsVector);
 router.get("/recommend", verifyToken, recommendNews);
 router.post("/ask",askRagAI);
+router.post("/detect", detectEmotion);
 
 router.post("/follow/:id", verifyToken, toggleFollow);
 router.post("/:id/isfollow", verifyToken, isFollow);

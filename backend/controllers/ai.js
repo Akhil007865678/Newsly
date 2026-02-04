@@ -9,10 +9,62 @@ const router = express.Router();
 
 /* ================== CLIENT SETUP ================== */
 
-const openai = new OpenAI({
+const openai1 = new OpenAI({
   apiKey: process.env.Ai_key,
+  baseURL: "openai/gpt-oss-120b",
+});
+
+const openai = new OpenAI({
+  apiKey: process.env.emotion_AI, // your env key
   baseURL: "https://api.groq.com/openai/v1",
 });
+
+export const detectEmotion = async (req, res) => {
+  try {
+    const { text } = req.body;
+
+    if (!text || text.trim().length === 0) {
+      return res.status(400).json({ emotion: "neutral" });
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an emotion classifier for news articles. Respond with only one word: happy, sad, or neutral. No explanation.",
+        },
+        {
+          role: "user",
+          content: text,
+        },
+      ],
+      temperature: 0, // VERY IMPORTANT → stable output
+      max_tokens: 3,
+    });
+
+    let emotion = completion.choices[0].message.content.trim().toLowerCase();
+
+    // Safety fallback
+    if (!["happy", "sad", "neutral"].includes(emotion)) {
+      emotion = "neutral";
+    }
+
+    return res.json({ emotion });
+  } catch (error) {
+    console.error("Emotion detection error:", error);
+    return res.status(500).json({ emotion: "neutral" });
+  }
+};
+
+
+
+
+
+
+
+
 
 const pinecone = new Pinecone({
   apiKey: process.env.PineCone_Key,

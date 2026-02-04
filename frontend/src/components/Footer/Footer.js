@@ -21,18 +21,13 @@ const Footer = () => {
   // 🔗 Dynamic links
   useEffect(() => {
     const fetchLinks = async () => {
-      try {
-        const res = await axios.get("/api/footer-links");
-        setLinks(res.data);
-      } catch {
-        setLinks([
+      setLinks([
           { name: "Home", url: "/" },
           { name: "Newsly Ai", url: "/newsly" },
           { name: "Trending", url: "/" },
           { name: "Profile", url: "/profile" },
           { name: "Voice Search", url: "/" },
         ]);
-      }
     };
     fetchLinks();
   }, []);

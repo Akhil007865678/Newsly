@@ -17,10 +17,11 @@ const NewsPopup = ({ news, onClose }) => {
   const [translatedTitle, setTranslatedTitle] = useState(news.title);
   const [translatedContent, setTranslatedContent] = useState(news.content);
   const [loadingTranslation, setLoadingTranslation] = useState(false);
-
+  const [emotion, setEmotion] = useState("neutral");
   
   const token=getToken();
   // Fetch comments
+
   useEffect(() => {
     //console.log("data3: ",news.author);
     const fetchComments = async () => {
@@ -143,28 +144,38 @@ const NewsPopup = ({ news, onClose }) => {
 
     const textToRead = `${translatedTitle}. ${translatedContent}`;
 
-    const utterance = new SpeechSynthesisUtterance(textToRead);
+    window.speechSynthesis.cancel();
+    setIsSpeaking(true);
 
-    // Language handling
-    if (language === "hi") {
-      utterance.lang = "hi-IN";
-    } else if (language === "ta") {
-      utterance.lang = "ta-IN";
-    } else if (language === "te") {
-      utterance.lang = "te-IN";
-    } else if (language === "fr") {
-      utterance.lang = "fr-FR";
-    } else {
-      utterance.lang = "en-IN";
+    let utterance;
+
+    if (emotion === "happy") {
+      utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.rate = 1.03;
+      utterance.pitch = 1.08;
+    } 
+    else if (emotion === "sad") {
+      utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.rate = 0.92;
+      utterance.pitch = 0.9;
+    } 
+    else {
+      utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.rate = 0.97;
+      utterance.pitch = 1;
     }
 
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
+    // 🌍 language handling (keep this)
+    if (language === "hi") utterance.lang = "hi-IN";
+    else if (language === "ta") utterance.lang = "ta-IN";
+    else if (language === "te") utterance.lang = "te-IN";
+    else if (language === "fr") utterance.lang = "fr-FR";
+    else utterance.lang = "en-IN";
 
-    utterance.onstart = () => setIsSpeaking(true);
+    utterance.volume = 1;
+
     utterance.onend = () => setIsSpeaking(false);
 
-    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   };
 
@@ -208,6 +219,23 @@ const NewsPopup = ({ news, onClose }) => {
 
     translateNews();
   }, [language, news.title, news.content]);
+
+  useEffect(() => {
+    const fetchEmotion = async () => {
+      try {
+        const res = await API.post("/auth/detect", {
+          text: `${news.title} ${news.content}`
+        });
+        console.log("Emotion: ", res.data.emotion);
+        setEmotion(res.data.emotion);
+      } catch (err) {
+        console.error("Emotion API error", err);
+        setEmotion("neutral");
+      }
+    };
+
+    fetchEmotion();
+  }, [news.title, news.content]);
 
   return (
     <div className="news-popup-overlay" onClick={onClose}>
