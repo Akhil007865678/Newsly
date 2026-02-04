@@ -308,5 +308,5 @@ const NewsPopup = ({ news, onClose }) => {
     </div>
   );
 };
-
+ 
 export default NewsPopup;
