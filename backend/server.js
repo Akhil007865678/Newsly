@@ -11,7 +11,7 @@ import "./config/redis.js";
 dotenv.config();
 const app = express();
 app.use(cors({
-    origin: "*",
+    origin: "https://newsly-backend-2pry.onrender.com",
     credentials: true,
   }
 ));
